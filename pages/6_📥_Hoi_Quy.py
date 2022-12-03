@@ -49,7 +49,7 @@ def Bai02():
 
 
     plt.plot(x, y)
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai03():
     m = 100
@@ -91,7 +91,7 @@ def Bai03():
     sai_so_binh_phuong_trung_binh = mean_squared_error(y, y_train_predict)
     st.write('Sai số bình phương trung bình: %.6f' % (sai_so_binh_phuong_trung_binh/2))
 
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai04():
     X = np.array([[147, 150, 153, 158, 163, 165, 168, 170, 173, 175, 178, 180, 183]]).T
@@ -115,7 +115,7 @@ def Bai04():
     y = [y1, y2]
 
     plt.plot(x, y)
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai05():
     X = np.array([[147, 150, 153, 158, 163, 165, 168, 170, 173, 175, 178, 180, 183]]).T
@@ -141,7 +141,7 @@ def Bai05():
     y = [y1, y2]
 
     plt.plot(x, y)
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 
 option = st.sidebar.selectbox('Lựa chọn bài tập',

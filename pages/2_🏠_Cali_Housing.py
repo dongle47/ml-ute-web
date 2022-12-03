@@ -24,7 +24,7 @@ from scipy.stats import randint
 
 rooms_ix, bedrooms_ix, population_ix, households_ix = 3, 4, 5, 6
 
-st.markdown("# Cali Housing xxxxxxxx Demo")
+st.markdown("# Cali Housing Demo")
 
 st.sidebar.header("Cali Housing Exercises")
 

@@ -99,7 +99,7 @@ def Bai1():
     my_test = np.array([[2.5, 4.0]])
     ket_qua = svc.predict(my_test)
 
-    st.write('Ket qua nhan dang la nhom:', ket_qua[0])
+    st.write('Kết quả nhận đang là nhóm:', ket_qua[0])
 
     fig, ax = plt.subplots()
 
@@ -142,7 +142,7 @@ def Bai1():
         edgecolors="k",
     )
 
-    plt.legend(['Nhom 0', 'Nhom 1'])
+    plt.legend(['Nhóm 0', 'Nhóm 1'])
 
     st.pyplot(fig) 
 
@@ -201,7 +201,7 @@ def Bai1a():
     my_test = np.array([[2.5, 4.0]])
     ket_qua = svc.predict(my_test)
 
-    st.write('Ket qua nhan dang la nhom:', ket_qua[0])
+    st.write('Kết quả nhận đang là nhóm:', ket_qua[0])
 
     fig, ax = plt.subplots()
 
@@ -226,12 +226,12 @@ def Bai1a():
         y0 = train_data[i,1]
         d = np.abs(a*x0 + b*y0 + c)/np.sqrt(a**2 + b**2)
         distance[i] = d
-    print('Khoang cach')
+    print('Khoảng cách')
     print(distance)
     vi_tri_min = np.argmin(distance)
     min_val = np.min(distance)
-    print('vi tri min', vi_tri_min)
-    print('gia tri min', min_val)
+    print('Vị trí min', vi_tri_min)
+    print('Giá trị min', min_val)
     print('Những giá trị gần min')
     vi_tri = []
     for i in range(0, SIZE):
@@ -261,9 +261,9 @@ def Bai1a():
     plt.plot(xx, yy, 'b--')
 
 
-    plt.legend(['Nhom 0', 'Nhom 1'])
+    plt.legend(['Nhóm 0', 'Nhóm 1'])
 
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai02():
     centers = [[2, 2], [7, 7]]
@@ -359,7 +359,7 @@ def Bai02():
 
     plt.legend(['Nhóm 0', 'Nhóm 1'])
 
-    st.pyplot(fig)    
+    st.plotly_chart(fig)    
 
 def linearsvc():
     X, y = make_blobs(n_samples=40, centers=2, random_state=0)
@@ -400,10 +400,8 @@ def linearsvc():
     plt.tight_layout()
     st.pyplot(fig)
 
-
 option = st.sidebar.selectbox('Lựa chọn bài tập',
-    ('Bai01', 'Bai02', 'Bai03', 'linearsvc_support_vectors'))
-
+    ('Bai01', 'Bai01a', 'Bai02', 'linearsvc_support_vectors'))
 
 if(option == 'Bai01'):
     Bai1()

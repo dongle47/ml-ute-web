@@ -164,7 +164,7 @@ def Bai03a():
     # 784 = 28x28
     RESHAPED = 784
     sample = sample.reshape(100, RESHAPED) 
-    knn = joblib.load("E:\\UTE\\MachineLearning\\machine-learning-web\\knn_mnist.pkl")
+    knn = joblib.load("E:\\UTE\\MachineLearning\\ML-UTE-WEB\\knn_mnist.pkl")
     predicted = knn.predict(sample)
     k = 0
     text = ''
@@ -226,7 +226,7 @@ def Bai04(index):
     st.write(ketqua)
 
 option = st.sidebar.selectbox('Lựa chọn bài tập',
-    ('Bai01', 'Bai02', 'Bai03', 'Bai03a', 'Bai04', 'Bai08'))
+    ('Bai01', 'Bai02', 'Bai03', 'Bai03a', 'Bai04'))
 
 if(option == 'Bai01'):
     Bai01()

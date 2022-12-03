@@ -10,7 +10,7 @@ from sklearn.preprocessing import PolynomialFeatures
 
 
 
-st.markdown("# overfitting Demo")
+st.markdown("# Overfitting Demo")
 
 st.sidebar.header("Overfitting Exercise")
 
@@ -60,9 +60,9 @@ def Bai01a():
     plt.plot(X_test,y_test, 's')
     plt.plot(x_ve, y_ve, 'b')
     plt.plot(x_ve, y_real, '--')
-    plt.title('Hoi quy da thuc bac 2')
+    plt.title('Hồi quy đa thức bậc 2')
 
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai01b():
     np.random.seed(100)
@@ -112,9 +112,9 @@ def Bai01b():
     plt.plot(X_test,y_test, 's')
     plt.plot(x_ve, y_ve, 'b')
     plt.plot(x_ve, y_real, '--')
-    plt.title('Hoi quy da thuc bac 4')
+    plt.title('Hồi quy đa thức bậc 4')
 
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai01c():
     np.random.seed(100)
@@ -169,7 +169,7 @@ def Bai01c():
     plt.plot(x_ve, y_real, '--')
     plt.title('Hồi quy đa thức bậc 8')
 
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai01d():
     np.random.seed(100)
@@ -223,7 +223,7 @@ def Bai01d():
     plt.plot(x_ve, y_real, '--')
     plt.title('Hồi quy đa thức bậc 16')
 
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 
 option = st.sidebar.selectbox('Lựa chọn bài tập',
