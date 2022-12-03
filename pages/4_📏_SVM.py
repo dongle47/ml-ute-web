@@ -24,27 +24,6 @@ st.markdown("# SVM Demo")
 
 st.sidebar.header("SVM Exercise")
 
-def bai0():
-    N = 150
-
-    X = np.random.rand(1000)
-    y = 4 + 3 * X + .5*np.random.randn(1000)
-
-    model = LinearRegression()
-    model.fit(X.reshape(-1, 1), y.reshape(-1, 1))
-    w, b = model.coef_[0][0], model.intercept_[0]
-    x0 = 0
-    x1 = 1
-    y0 = w*x0 + b
-    y1 = w*x1 + b
-
-    fig, ax = plt.subplots()
-    ax = plt.plot(X, y, 'bo', markersize = 2)
-    ax = plt.plot([x0, x1], [y0, y1], 'r')
-
-    st.pyplot(fig)
-
-
 def Bai1():
     centers = [[2, 2], [7, 7]]
     n_classes = len(centers)
@@ -113,7 +92,6 @@ def Bai1():
 
     plt.plot(xx, yy, 'b')
 
-
     decision_function = svc.decision_function(train_data)
     support_vector_indices = np.where(np.abs(decision_function) <= 1 + 1e-15)[0]
     support_vectors = train_data[support_vector_indices]
@@ -145,7 +123,6 @@ def Bai1():
     plt.legend(['Nhóm 0', 'Nhóm 1'])
 
     st.pyplot(fig) 
-
 
 def Bai1a():
     centers = [[2, 2], [7, 7]]
@@ -196,7 +173,7 @@ def Bai1a():
 
     predicted = svc.predict(test_data)
     sai_so = accuracy_score(test_labels, predicted)
-    st.write('sai so:', sai_so)
+    st.write('Sai số:', sai_so)
 
     my_test = np.array([[2.5, 4.0]])
     ket_qua = svc.predict(my_test)

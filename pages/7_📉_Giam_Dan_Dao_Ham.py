@@ -101,7 +101,7 @@ def Bai01():
     plt.axis([-7, 7, -10, 50])
 
     plt.tight_layout()
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai02():
     X = np.random.rand(1000)
@@ -118,7 +118,7 @@ def Bai02():
     fig = plt.figure()
     plt.plot(X, y, 'bo', markersize = 2)
     plt.plot([x0, x1], [y0, y1], 'r')
-    st.pyplot(fig)
+    st.plotly_chart(fig)
 
 def Bai02a():
     X = np.random.rand(1000)

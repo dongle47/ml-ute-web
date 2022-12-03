@@ -191,8 +191,6 @@ def Bai04(index):
     st.title("Nhận diện chữ viết tay")
     st.set_option('deprecation.showfileUploaderEncoding', False)
 
-    st.subheader("Kindly upload file below")
-
     mnist = keras.datasets.mnist
     (X_train, Y_train), (X_test, Y_test) = mnist.load_data() 
     X_test = X_test
@@ -224,6 +222,8 @@ def Bai04(index):
             k = k + 1
         ketqua = ketqua + '\n'
     st.write(ketqua)
+
+    st.button("Chạy lại")
 
 option = st.sidebar.selectbox('Lựa chọn bài tập',
     ('Bai01', 'Bai02', 'Bai03', 'Bai03a', 'Bai04'))
