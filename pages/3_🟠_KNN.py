@@ -172,6 +172,8 @@ def Bai03a():
             # st.write('%2d' % (predicted[k]), end='')
             text += str(predicted[k]) + ' '
             k = k + 1
+        st.write(text)
+        text = ''
         # st.write()
     st.write(text)
     digit = np.zeros((10*28,10*28), np.uint8)
