@@ -349,271 +349,271 @@ def RandomForestRegression():
     st.write('Sai số bình phương trung bình - test:')
     st.write('%.2f' % rmse_test)
 
-def RandomForestRegressionRandomSearchCV():
-    # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
-    housing = pd.read_csv("housing.csv")
+# def RandomForestRegressionRandomSearchCV():
+#     housing = pd.read_csv("housing.csv")
     
-# Them column income_cat dung de chia data
-    housing["income_cat"] = pd.cut(housing["median_income"],
-                                bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
-                                labels=[1, 2, 3, 4, 5])
+#     housing["income_cat"] = pd.cut(housing["median_income"],
+#                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+#                                 labels=[1, 2, 3, 4, 5])
 
-    split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-    for train_index, test_index in split.split(housing, housing["income_cat"]):
-        strat_train_set = housing.loc[train_index]
-        strat_test_set = housing.loc[test_index]
+#     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+#     for train_index, test_index in split.split(housing, housing["income_cat"]):
+#         strat_train_set = housing.loc[train_index]
+#         strat_test_set = housing.loc[test_index]
 
-    # Chia xong thi delete column income_cat
-    for set_ in (strat_train_set, strat_test_set):
-        set_.drop("income_cat", axis=1, inplace=True)
+#     # Chia xong thi delete column income_cat
+#     for set_ in (strat_train_set, strat_test_set):
+#         set_.drop("income_cat", axis=1, inplace=True)
 
-    housing = strat_train_set.drop("median_house_value", axis=1)
-    housing_labels = strat_train_set["median_house_value"].copy()
+#     housing = strat_train_set.drop("median_house_value", axis=1)
+#     housing_labels = strat_train_set["median_house_value"].copy()
 
-    housing_num = housing.drop("ocean_proximity", axis=1)
+#     housing_num = housing.drop("ocean_proximity", axis=1)
 
-    num_pipeline = Pipeline([
-            ('imputer', SimpleImputer(strategy="median")),
-            ('attribs_adder', CombinedAttributesAdder()),
-            ('std_scaler', StandardScaler()),
-        ])
+#     num_pipeline = Pipeline([
+#             ('imputer', SimpleImputer(strategy="median")),
+#             ('attribs_adder', CombinedAttributesAdder()),
+#             ('std_scaler', StandardScaler()),
+#         ])
 
-    num_attribs = list(housing_num)
-    cat_attribs = ["ocean_proximity"]
-    full_pipeline = ColumnTransformer([
-            ("num", num_pipeline, num_attribs),
-            ("cat", OneHotEncoder(), cat_attribs),
-        ])
+#     num_attribs = list(housing_num)
+#     cat_attribs = ["ocean_proximity"]
+#     full_pipeline = ColumnTransformer([
+#             ("num", num_pipeline, num_attribs),
+#             ("cat", OneHotEncoder(), cat_attribs),
+#         ])
 
-    housing_prepared = full_pipeline.fit_transform(housing)
+#     housing_prepared = full_pipeline.fit_transform(housing)
 
-    param_distribs = {
-            'n_estimators': randint(low=1, high=200),
-            'max_features': randint(low=1, high=8),
-        }
+#     param_distribs = {
+#             'n_estimators': randint(low=1, high=200),
+#             'max_features': randint(low=1, high=8),
+#         }
 
-    # Training
-    forest_reg = RandomForestRegressor(random_state=42)
-    rnd_search = RandomizedSearchCV(forest_reg, param_distributions=param_distribs,
-                                    n_iter=10, cv=5, scoring='neg_mean_squared_error', random_state=42)
-    rnd_search.fit(housing_prepared, housing_labels)
+#     # Training
+#     forest_reg = RandomForestRegressor(random_state=42)
+#     rnd_search = RandomizedSearchCV(forest_reg, param_distributions=param_distribs,
+#                                     n_iter=10, cv=5, scoring='neg_mean_squared_error', random_state=42)
+#     rnd_search.fit(housing_prepared, housing_labels)
 
-    final_model = rnd_search.best_estimator_
-    joblib.dump(final_model, "forest_reg_rand_search.pkl")
-
-
-    # Prediction
-    some_data = housing.iloc[:5]
-    some_labels = housing_labels.iloc[:5]
-    some_data_prepared = full_pipeline.transform(some_data)
-    # Prediction 5 samples 
-    st.write("Predictions:", final_model.predict(some_data_prepared))
-    st.write("Labels:", list(some_labels))
-    st.write('\n')
-
-    # Tính sai số bình phương trung bình trên tập dữ liệu huấn luyện
-    housing_predictions = final_model.predict(housing_prepared)
-    mse_train = mean_squared_error(housing_labels, housing_predictions)
-    rmse_train = np.sqrt(mse_train)
-    st.write('Sai số bình phương trung bình - train:')
-    st.write('%.2f' % rmse_train)
-
-    # Tính sai số bình phương trung bình trên tập dữ liệu kiểm định chéo (cross-validation) 
-    scores = cross_val_score(final_model, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
-
-    st.write('Sai số bình phương trung bình - cross-validation:')
-    rmse_cross_validation = np.sqrt(-scores)
-    display_scores(rmse_cross_validation)
-
-    # Tính sai số bình phương trung bình trên tập dữ liệu kiểm tra (test)
-    X_test = strat_test_set.drop("median_house_value", axis=1)
-    y_test = strat_test_set["median_house_value"].copy()
-    X_test_prepared = full_pipeline.transform(X_test)
-    y_predictions = final_model.predict(X_test_prepared)
-
-    mse_test = mean_squared_error(y_test, y_predictions)
-    rmse_test = np.sqrt(mse_test)
-    st.write('Sai số bình phương trung bình - test:')
-    st.write('%.2f' % rmse_test)
-
-def RandomForestRegressionRandomSearchCVUseModel():
-    housing = pd.read_csv("housing.csv")
-
-# Them column income_cat dung de chia data
-    housing["income_cat"] = pd.cut(housing["median_income"],
-                                bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
-                                labels=[1, 2, 3, 4, 5])
-
-    split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-    for train_index, test_index in split.split(housing, housing["income_cat"]):
-        strat_train_set = housing.loc[train_index]
-        strat_test_set = housing.loc[test_index]
-
-    # Chia xong thi delete column income_cat
-    for set_ in (strat_train_set, strat_test_set):
-        set_.drop("income_cat", axis=1, inplace=True)
-
-    housing = strat_train_set.drop("median_house_value", axis=1)
-    housing_labels = strat_train_set["median_house_value"].copy()
-
-    housing_num = housing.drop("ocean_proximity", axis=1)
-
-    num_pipeline = Pipeline([
-            ('imputer', SimpleImputer(strategy="median")),
-            ('attribs_adder', CombinedAttributesAdder()),
-            ('std_scaler', StandardScaler()),
-        ])
-
-    num_attribs = list(housing_num)
-    cat_attribs = ["ocean_proximity"]
-    full_pipeline = ColumnTransformer([
-            ("num", num_pipeline, num_attribs),
-            ("cat", OneHotEncoder(), cat_attribs),
-        ])
-
-    housing_prepared = full_pipeline.fit_transform(housing)
-
-    param_distribs = {
-            'n_estimators': randint(low=1, high=200),
-            'max_features': randint(low=1, high=8),
-        }
-
-    # Training
-    forest_reg = RandomForestRegressor(random_state=42)
-    rnd_search = RandomizedSearchCV(forest_reg, param_distributions=param_distribs,
-                                    n_iter=10, cv=5, scoring='neg_mean_squared_error', random_state=42)
-    rnd_search.fit(housing_prepared, housing_labels)
-
-    final_model = rnd_search.best_estimator_
-    joblib.dump(final_model, "forest_reg_rand_search.pkl")
-
-    # Prediction
-    some_data = housing.iloc[:5]
-    some_labels = housing_labels.iloc[:5]
-    some_data_prepared = full_pipeline.transform(some_data)
-    # Prediction 5 samples 
-    st.write("Predictions:", final_model.predict(some_data_prepared))
-    st.write("Labels:", list(some_labels))
-    st.write('\n')
-
-    # Tính sai số bình phương trung bình trên tập dữ liệu huấn luyện
-    housing_predictions = final_model.predict(housing_prepared)
-    mse_train = mean_squared_error(housing_labels, housing_predictions)
-    rmse_train = np.sqrt(mse_train)
-    st.write('Sai số bình phương trung bình - train:')
-    st.write('%.2f' % rmse_train)
-
-    # Tính sai số bình phương trung bình trên tập dữ liệu kiểm định chéo (cross-validation) 
-    scores = cross_val_score(final_model, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
-
-    st.write('Sai số bình phương trung bình - cross-validation:')
-    rmse_cross_validation = np.sqrt(-scores)
-    display_scores(rmse_cross_validation)
-
-    # Tính sai số bình phương trung bình trên tập dữ liệu kiểm tra (test)
-    X_test = strat_test_set.drop("median_house_value", axis=1)
-    y_test = strat_test_set["median_house_value"].copy()
-    X_test_prepared = full_pipeline.transform(X_test)
-    y_predictions = final_model.predict(X_test_prepared)
-
-    mse_test = mean_squared_error(y_test, y_predictions)
-    rmse_test = np.sqrt(mse_test)
-    st.write('Sai số bình phương trung bình - test:')
-    st.write('%.2f' % rmse_test)
-
-def RandomForestRegressionGridSearchCV():
-    # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
-    housing = pd.read_csv("housing.csv")
-
-    # Them column income_cat dung de chia data
-    housing["income_cat"] = pd.cut(housing["median_income"],
-                                bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
-                                labels=[1, 2, 3, 4, 5])
-
-    split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-    for train_index, test_index in split.split(housing, housing["income_cat"]):
-        strat_train_set = housing.loc[train_index]
-        strat_test_set = housing.loc[test_index]
-
-    # Chia xong thi delete column income_cat
-    for set_ in (strat_train_set, strat_test_set):
-        set_.drop("income_cat", axis=1, inplace=True)
-
-    housing = strat_train_set.drop("median_house_value", axis=1)
-    housing_labels = strat_train_set["median_house_value"].copy()
-
-    housing_num = housing.drop("ocean_proximity", axis=1)
-
-    num_pipeline = Pipeline([
-            ('imputer', SimpleImputer(strategy="median")),
-            ('attribs_adder', CombinedAttributesAdder()),
-            ('std_scaler', StandardScaler()),
-        ])
-
-    num_attribs = list(housing_num)
-    cat_attribs = ["ocean_proximity"]
-    full_pipeline = ColumnTransformer([
-            ("num", num_pipeline, num_attribs),
-            ("cat", OneHotEncoder(), cat_attribs),
-        ])
-
-    housing_prepared = full_pipeline.fit_transform(housing)
-
-    param_distribs = {
-            'n_estimators': randint(low=1, high=200),
-            'max_features': randint(low=1, high=8),
-        }
-
-    # Training
-    forest_reg = RandomForestRegressor(random_state=42)
-    rnd_search = RandomizedSearchCV(forest_reg, param_distributions=param_distribs,
-                                    n_iter=10, cv=5, scoring='neg_mean_squared_error', random_state=42)
-    rnd_search.fit(housing_prepared, housing_labels)
-
-    final_model = rnd_search.best_estimator_
-    joblib.dump(final_model, "forest_reg_rand_search.pkl")
+#     final_model = rnd_search.best_estimator_
+#     joblib.dump(final_model, "forest_reg_rand_search.pkl")
 
 
-    # Prediction
-    some_data = housing.iloc[:5]
-    some_labels = housing_labels.iloc[:5]
-    some_data_prepared = full_pipeline.transform(some_data)
-    # Prediction 5 samples 
-    st.write("Predictions:", final_model.predict(some_data_prepared))
-    st.write("Labels:", list(some_labels))
-    st.write('\n')
+#     # Prediction
+#     some_data = housing.iloc[:5]
+#     some_labels = housing_labels.iloc[:5]
+#     some_data_prepared = full_pipeline.transform(some_data)
+#     # Prediction 5 samples 
+#     st.write("Predictions:", final_model.predict(some_data_prepared))
+#     st.write("Labels:", list(some_labels))
+#     st.write('\n')
 
-    # Tính sai số bình phương trung bình trên tập dữ liệu huấn luyện
-    housing_predictions = final_model.predict(housing_prepared)
-    mse_train = mean_squared_error(housing_labels, housing_predictions)
-    rmse_train = np.sqrt(mse_train)
-    st.write('Sai số bình phương trung bình - train:')
-    st.write('%.2f' % rmse_train)
+#     # Tính sai số bình phương trung bình trên tập dữ liệu huấn luyện
+#     housing_predictions = final_model.predict(housing_prepared)
+#     mse_train = mean_squared_error(housing_labels, housing_predictions)
+#     rmse_train = np.sqrt(mse_train)
+#     st.write('Sai số bình phương trung bình - train:')
+#     st.write('%.2f' % rmse_train)
 
-    # Tính sai số bình phương trung bình trên tập dữ liệu kiểm định chéo (cross-validation) 
-    scores = cross_val_score(final_model, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
+#     # Tính sai số bình phương trung bình trên tập dữ liệu kiểm định chéo (cross-validation) 
+#     scores = cross_val_score(final_model, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
 
-    st.write('Sai số bình phương trung bình - cross-validation:')
-    rmse_cross_validation = np.sqrt(-scores)
-    display_scores(rmse_cross_validation)
+#     st.write('Sai số bình phương trung bình - cross-validation:')
+#     rmse_cross_validation = np.sqrt(-scores)
+#     display_scores(rmse_cross_validation)
 
-    # Tính sai số bình phương trung bình trên tập dữ liệu kiểm tra (test)
-    X_test = strat_test_set.drop("median_house_value", axis=1)
-    y_test = strat_test_set["median_house_value"].copy()
-    X_test_prepared = full_pipeline.transform(X_test)
-    y_predictions = final_model.predict(X_test_prepared)
+#     # Tính sai số bình phương trung bình trên tập dữ liệu kiểm tra (test)
+#     X_test = strat_test_set.drop("median_house_value", axis=1)
+#     y_test = strat_test_set["median_house_value"].copy()
+#     X_test_prepared = full_pipeline.transform(X_test)
+#     y_predictions = final_model.predict(X_test_prepared)
 
-    mse_test = mean_squared_error(y_test, y_predictions)
-    rmse_test = np.sqrt(mse_test)
-    st.write('Sai số bình phương trung bình - test:')
-    st.write('%.2f' % rmse_test)
+#     mse_test = mean_squared_error(y_test, y_predictions)
+#     rmse_test = np.sqrt(mse_test)
+#     st.write('Sai số bình phương trung bình - test:')
+#     st.write('%.2f' % rmse_test)
+
+# def RandomForestRegressionRandomSearchCVUseModel():
+#     housing = pd.read_csv("housing.csv")
+
+# # Them column income_cat dung de chia data
+#     housing["income_cat"] = pd.cut(housing["median_income"],
+#                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+#                                 labels=[1, 2, 3, 4, 5])
+
+#     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+#     for train_index, test_index in split.split(housing, housing["income_cat"]):
+#         strat_train_set = housing.loc[train_index]
+#         strat_test_set = housing.loc[test_index]
+
+#     # Chia xong thi delete column income_cat
+#     for set_ in (strat_train_set, strat_test_set):
+#         set_.drop("income_cat", axis=1, inplace=True)
+
+#     housing = strat_train_set.drop("median_house_value", axis=1)
+#     housing_labels = strat_train_set["median_house_value"].copy()
+
+#     housing_num = housing.drop("ocean_proximity", axis=1)
+
+#     num_pipeline = Pipeline([
+#             ('imputer', SimpleImputer(strategy="median")),
+#             ('attribs_adder', CombinedAttributesAdder()),
+#             ('std_scaler', StandardScaler()),
+#         ])
+
+#     num_attribs = list(housing_num)
+#     cat_attribs = ["ocean_proximity"]
+#     full_pipeline = ColumnTransformer([
+#             ("num", num_pipeline, num_attribs),
+#             ("cat", OneHotEncoder(), cat_attribs),
+#         ])
+
+#     housing_prepared = full_pipeline.fit_transform(housing)
+
+#     param_distribs = {
+#             'n_estimators': randint(low=1, high=200),
+#             'max_features': randint(low=1, high=8),
+#         }
+
+#     # Training
+#     forest_reg = RandomForestRegressor(random_state=42)
+#     rnd_search = RandomizedSearchCV(forest_reg, param_distributions=param_distribs,
+#                                     n_iter=10, cv=5, scoring='neg_mean_squared_error', random_state=42)
+#     rnd_search.fit(housing_prepared, housing_labels)
+
+#     final_model = rnd_search.best_estimator_
+#     joblib.dump(final_model, "forest_reg_rand_search.pkl")
+
+#     # Prediction
+#     some_data = housing.iloc[:5]
+#     some_labels = housing_labels.iloc[:5]
+#     some_data_prepared = full_pipeline.transform(some_data)
+#     # Prediction 5 samples 
+#     st.write("Predictions:", final_model.predict(some_data_prepared))
+#     st.write("Labels:", list(some_labels))
+#     st.write('\n')
+
+#     # Tính sai số bình phương trung bình trên tập dữ liệu huấn luyện
+#     housing_predictions = final_model.predict(housing_prepared)
+#     mse_train = mean_squared_error(housing_labels, housing_predictions)
+#     rmse_train = np.sqrt(mse_train)
+#     st.write('Sai số bình phương trung bình - train:')
+#     st.write('%.2f' % rmse_train)
+
+#     # Tính sai số bình phương trung bình trên tập dữ liệu kiểm định chéo (cross-validation) 
+#     scores = cross_val_score(final_model, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
+
+#     st.write('Sai số bình phương trung bình - cross-validation:')
+#     rmse_cross_validation = np.sqrt(-scores)
+#     display_scores(rmse_cross_validation)
+
+#     # Tính sai số bình phương trung bình trên tập dữ liệu kiểm tra (test)
+#     X_test = strat_test_set.drop("median_house_value", axis=1)
+#     y_test = strat_test_set["median_house_value"].copy()
+#     X_test_prepared = full_pipeline.transform(X_test)
+#     y_predictions = final_model.predict(X_test_prepared)
+
+#     mse_test = mean_squared_error(y_test, y_predictions)
+#     rmse_test = np.sqrt(mse_test)
+#     st.write('Sai số bình phương trung bình - test:')
+#     st.write('%.2f' % rmse_test)
+
+# def RandomForestRegressionGridSearchCV():
+#     # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+#     housing = pd.read_csv("housing.csv")
+
+#     # Them column income_cat dung de chia data
+#     housing["income_cat"] = pd.cut(housing["median_income"],
+#                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
+#                                 labels=[1, 2, 3, 4, 5])
+
+#     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+#     for train_index, test_index in split.split(housing, housing["income_cat"]):
+#         strat_train_set = housing.loc[train_index]
+#         strat_test_set = housing.loc[test_index]
+
+#     # Chia xong thi delete column income_cat
+#     for set_ in (strat_train_set, strat_test_set):
+#         set_.drop("income_cat", axis=1, inplace=True)
+
+#     housing = strat_train_set.drop("median_house_value", axis=1)
+#     housing_labels = strat_train_set["median_house_value"].copy()
+
+#     housing_num = housing.drop("ocean_proximity", axis=1)
+
+#     num_pipeline = Pipeline([
+#             ('imputer', SimpleImputer(strategy="median")),
+#             ('attribs_adder', CombinedAttributesAdder()),
+#             ('std_scaler', StandardScaler()),
+#         ])
+
+#     num_attribs = list(housing_num)
+#     cat_attribs = ["ocean_proximity"]
+#     full_pipeline = ColumnTransformer([
+#             ("num", num_pipeline, num_attribs),
+#             ("cat", OneHotEncoder(), cat_attribs),
+#         ])
+
+#     housing_prepared = full_pipeline.fit_transform(housing)
+
+#     param_distribs = {
+#             'n_estimators': randint(low=1, high=200),
+#             'max_features': randint(low=1, high=8),
+#         }
+
+#     # Training
+#     forest_reg = RandomForestRegressor(random_state=42)
+#     rnd_search = RandomizedSearchCV(forest_reg, param_distributions=param_distribs,
+#                                     n_iter=10, cv=5, scoring='neg_mean_squared_error', random_state=42)
+#     rnd_search.fit(housing_prepared, housing_labels)
+
+#     final_model = rnd_search.best_estimator_
+#     joblib.dump(final_model, "forest_reg_rand_search.pkl")
+
+
+#     # Prediction
+#     some_data = housing.iloc[:5]
+#     some_labels = housing_labels.iloc[:5]
+#     some_data_prepared = full_pipeline.transform(some_data)
+#     # Prediction 5 samples 
+#     st.write("Predictions:", final_model.predict(some_data_prepared))
+#     st.write("Labels:", list(some_labels))
+#     st.write('\n')
+
+#     # Tính sai số bình phương trung bình trên tập dữ liệu huấn luyện
+#     housing_predictions = final_model.predict(housing_prepared)
+#     mse_train = mean_squared_error(housing_labels, housing_predictions)
+#     rmse_train = np.sqrt(mse_train)
+#     st.write('Sai số bình phương trung bình - train:')
+#     st.write('%.2f' % rmse_train)
+
+#     # Tính sai số bình phương trung bình trên tập dữ liệu kiểm định chéo (cross-validation) 
+#     scores = cross_val_score(final_model, housing_prepared, housing_labels, scoring="neg_mean_squared_error", cv=10)
+
+#     st.write('Sai số bình phương trung bình - cross-validation:')
+#     rmse_cross_validation = np.sqrt(-scores)
+#     display_scores(rmse_cross_validation)
+
+#     # Tính sai số bình phương trung bình trên tập dữ liệu kiểm tra (test)
+#     X_test = strat_test_set.drop("median_house_value", axis=1)
+#     y_test = strat_test_set["median_house_value"].copy()
+#     X_test_prepared = full_pipeline.transform(X_test)
+#     y_predictions = final_model.predict(X_test_prepared)
+
+#     mse_test = mean_squared_error(y_test, y_predictions)
+#     rmse_test = np.sqrt(mse_test)
+#     st.write('Sai số bình phương trung bình - test:')
+#     st.write('%.2f' % rmse_test)
 
 
 option = st.sidebar.selectbox('Lựa chọn bài tập',
     ('Decision Tree Regression', 'Linear Regression', 'Linear Regression UseModel', 
-    'Random Forest Regression', 'Random Forest Regression Random Search CV', 
-    'Random Forest Regression Random Search CV UseModel',
-    'Random Forest Regression Grid Search CV'))
+    'Random Forest Regression', 
+    # 'Random Forest Regression Random Search CV', 
+    # 'Random Forest Regression Random Search CV UseModel',
+    # 'Random Forest Regression Grid Search CV'
+    ))
 
 if(option == 'Decision Tree Regression'):
     DecisionTreeRegression()
@@ -623,10 +623,10 @@ if(option == 'Linear Regression UseModel'):
     LinearRegressionUseModel()
 if(option == 'Random Forest Regression'):
     RandomForestRegression()
-if(option == 'Random Forest Regression Random Search CV'):
-    RandomForestRegressionRandomSearchCV()
-if(option == 'Random Forest Regression Random Search CV UseModel'):
-    RandomForestRegressionRandomSearchCVUseModel()
-if(option == 'Random Forest Regression Grid Search CV'):
-    RandomForestRegressionGridSearchCV()
+# if(option == 'Random Forest Regression Random Search CV'):
+#     RandomForestRegressionRandomSearchCV()
+# if(option == 'Random Forest Regression Random Search CV UseModel'):
+#     RandomForestRegressionRandomSearchCVUseModel()
+# if(option == 'Random Forest Regression Grid Search CV'):
+#     RandomForestRegressionGridSearchCV()
 
