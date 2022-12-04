@@ -2,7 +2,7 @@ import streamlit as st
 import cv2
 # import tkinter as tk
 
-from PIL import ImageTk, Image
+from PIL import Image
 
 from sklearn.datasets import make_blobs
 from sklearn.model_selection import train_test_split
