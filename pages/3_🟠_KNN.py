@@ -121,8 +121,8 @@ def Bai02():
         image = imutils.resize(image, width=32, inter=cv2.INTER_CUBIC)
 
         st.write("Số được nhận dạng là: {}".format(prediction))
-        cv2.imshow("Image", image)
-        st.image(image, caption='Enter any caption here', clamp=True)
+        # cv2.imshow("Image", image)
+        st.image(image, caption='', clamp=True)
 
 def Bai03():
     mnist = keras.datasets.mnist 
