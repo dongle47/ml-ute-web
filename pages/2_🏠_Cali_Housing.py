@@ -47,7 +47,7 @@ def display_scores(scores):
     st.write("Standard deviation: %.2f" % (scores.std()))
 
 def DecisionTreeRegression():
-    housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    housing = pd.read_csv("housing.csv")
 
     housing["income_cat"] = pd.cut(housing["median_income"],
                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
@@ -120,7 +120,9 @@ def DecisionTreeRegression():
     st.write('%.2f' % rmse_test)
 
 def LinearRegressionUseModel():
-    housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    housing = pd.read_csv("housing.csv")
+
 # Them column income_cat dung de chia data
     housing["income_cat"] = pd.cut(housing["median_income"],
                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
@@ -157,7 +159,7 @@ def LinearRegressionUseModel():
 
     # Load model lin_reg to use
     lin_reg = LinearRegression()
-    lin_reg = joblib.load("E:\\UTE\\MachineLearning\\machine-learning-web\\model_lin_reg.pkl")
+    lin_reg = joblib.load("model_lin_reg.pkl")
 
 
     # Prediction
@@ -195,13 +197,14 @@ def LinearRegressionUseModel():
     st.write('%.2f' % rmse_test)
 
 def LinearRegression():
-    housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    housing = pd.read_csv("housing.csv")
 
     housing["income_cat"] = pd.cut(housing["median_income"],
                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
                                 labels=[1, 2, 3, 4, 5])
 
     split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+    
     for train_index, test_index in split.split(housing, housing["income_cat"]):
         strat_train_set = housing.loc[train_index]
         strat_test_set = housing.loc[test_index]
@@ -272,7 +275,7 @@ def LinearRegression():
     st.write('%.2f' % rmse_test)
 
 def RandomForestRegression():
-    housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    housing = pd.read_csv("housing.csv")
 # Them column income_cat dung de chia data
     housing["income_cat"] = pd.cut(housing["median_income"],
                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
@@ -347,7 +350,9 @@ def RandomForestRegression():
     st.write('%.2f' % rmse_test)
 
 def RandomForestRegressionRandomSearchCV():
-    housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    housing = pd.read_csv("housing.csv")
+    
 # Them column income_cat dung de chia data
     housing["income_cat"] = pd.cut(housing["median_income"],
                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
@@ -432,7 +437,9 @@ def RandomForestRegressionRandomSearchCV():
     st.write('%.2f' % rmse_test)
 
 def RandomForestRegressionRandomSearchCVUseModel():
-    housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    housing = pd.read_csv("housing.csv")
+
 # Them column income_cat dung de chia data
     housing["income_cat"] = pd.cut(housing["median_income"],
                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],
@@ -517,7 +524,9 @@ def RandomForestRegressionRandomSearchCVUseModel():
     st.write('%.2f' % rmse_test)
 
 def RandomForestRegressionGridSearchCV():
-    housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
+    housing = pd.read_csv("housing.csv")
+
     # Them column income_cat dung de chia data
     housing["income_cat"] = pd.cut(housing["median_income"],
                                 bins=[0., 1.5, 3.0, 4.5, 6., np.inf],

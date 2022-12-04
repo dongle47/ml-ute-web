@@ -27,7 +27,6 @@ st.markdown("# Knn Demo")
 
 st.sidebar.header("Knn Exercise")
 
-
 def preprocessing(img):
     try:
         img = img.astype('uint8')
@@ -164,7 +163,7 @@ def Bai03a():
     # 784 = 28x28
     RESHAPED = 784
     sample = sample.reshape(100, RESHAPED) 
-    knn = joblib.load("E:\\UTE\\MachineLearning\\ML-UTE-WEB\\knn_mnist.pkl")
+    knn = joblib.load("knn_mnist.pkl")
     predicted = knn.predict(sample)
     k = 0
     text = ''
@@ -195,7 +194,7 @@ def Bai04(index):
     (X_train, Y_train), (X_test, Y_test) = mnist.load_data() 
     X_test = X_test
  
-    knn = joblib.load("E:\\UTE\\MachineLearning\\Thu5\\knn_mnist.pkl")
+    knn = joblib.load("knn_mnist.pkl")
 
     digit = np.zeros((10*28,10*28), np.uint8)
     k = 0
@@ -220,8 +219,10 @@ def Bai04(index):
         for y in range(0, 10):
             ketqua = ketqua + '%3d' % (predicted[k])
             k = k + 1
-        ketqua = ketqua + '\n'
-    st.write(ketqua)
+        # ketqua = ketqua + '\n'
+        st.write(ketqua)
+        ketqua = ''
+    # st.write(ketqua)
 
     st.button("Chạy lại")
 

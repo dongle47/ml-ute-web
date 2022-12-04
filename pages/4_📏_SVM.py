@@ -73,7 +73,7 @@ def Bai1():
 
     predicted = svc.predict(test_data)
     sai_so = accuracy_score(test_labels, predicted)
-    st.write('sai so:', sai_so)
+    st.write('Sai số:', sai_so)
 
     my_test = np.array([[2.5, 4.0]])
     ket_qua = svc.predict(my_test)
@@ -203,19 +203,19 @@ def Bai1a():
         y0 = train_data[i,1]
         d = np.abs(a*x0 + b*y0 + c)/np.sqrt(a**2 + b**2)
         distance[i] = d
-    print('Khoảng cách')
-    print(distance)
+    st.write('Khoảng cách')
+    st.write(distance)
     vi_tri_min = np.argmin(distance)
     min_val = np.min(distance)
-    print('Vị trí min', vi_tri_min)
-    print('Giá trị min', min_val)
-    print('Những giá trị gần min')
+    st.write('Vị trí min', vi_tri_min)
+    st.write('Giá trị min', min_val)
+    st.write('Những giá trị gần min')
     vi_tri = []
     for i in range(0, SIZE):
         if (distance[i] - min_val) <= 1.0E-3:
-            print(distance[i])
+            st.write(distance[i])
             vi_tri.append(i)
-    print(vi_tri)
+    st.write(vi_tri)
     for i in vi_tri:
         x = train_data[i,0]
         y = train_data[i,1]
@@ -236,7 +236,6 @@ def Bai1a():
     xx = np.linspace(2, 7, 100)
     yy = -a*xx/b - c/b
     plt.plot(xx, yy, 'b--')
-
 
     plt.legend(['Nhóm 0', 'Nhóm 1'])
 
@@ -378,7 +377,7 @@ def linearsvc():
     st.pyplot(fig)
 
 option = st.sidebar.selectbox('Lựa chọn bài tập',
-    ('Bai01', 'Bai01a', 'Bai02', 'linearsvc_support_vectors'))
+    ('Bai01', 'Bai01a', 'Bai02', 'Linearsvc support vectors'))
 
 if(option == 'Bai01'):
     Bai1()
@@ -386,5 +385,5 @@ if(option == 'Bai01a'):
     Bai1a()
 if(option == 'Bai02'):
     Bai02()
-if(option == 'linearsvc_support_vectors'):
+if(option == 'Linearsvc support vectors'):
     linearsvc()
