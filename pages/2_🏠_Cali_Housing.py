@@ -437,7 +437,6 @@ def RandomForestRegressionRandomSearchCV():
     st.write('%.2f' % rmse_test)
 
 def RandomForestRegressionRandomSearchCVUseModel():
-    # housing = pd.read_csv("E:/UTE/MachineLearning/Thu5/End_to_End_Project/CaliHousing/housing.csv")
     housing = pd.read_csv("housing.csv")
 
 # Them column income_cat dung de chia data
@@ -487,7 +486,6 @@ def RandomForestRegressionRandomSearchCVUseModel():
 
     final_model = rnd_search.best_estimator_
     joblib.dump(final_model, "forest_reg_rand_search.pkl")
-
 
     # Prediction
     some_data = housing.iloc[:5]
