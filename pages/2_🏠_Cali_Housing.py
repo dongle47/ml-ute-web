@@ -196,7 +196,7 @@ def LinearRegressionUseModel():
     st.write('Sai số bình phương trung bình - test:')
     st.write('%.2f' % rmse_test)
 
-def LinearRegression():
+def LinearRegressionEx():
     housing = pd.read_csv("housing.csv")
 
     housing["income_cat"] = pd.cut(housing["median_income"],
@@ -618,7 +618,7 @@ option = st.sidebar.selectbox('Lựa chọn bài tập',
 if(option == 'Decision Tree Regression'):
     DecisionTreeRegression()
 if(option == 'Linear Regression'):
-    LinearRegression()
+    LinearRegressionEx()
 if(option == 'Linear Regression UseModel'):
     LinearRegressionUseModel()
 if(option == 'Random Forest Regression'):
