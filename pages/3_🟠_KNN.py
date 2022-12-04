@@ -183,7 +183,8 @@ def Bai03a():
             digit[x*28:(x+1)*28, y*28:(y+1)*28] = X_test[index[k]]
             k = k + 1
 
-    cv2.imshow('Digit', digit)
+    # cv2.imshow('Digit', digit)
+    st.image(digit)
 
 def create(index):
         index = np.random.randint(0, 9999, 100)
