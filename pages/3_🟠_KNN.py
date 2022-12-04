@@ -1,6 +1,6 @@
 import streamlit as st
 import cv2
-import tkinter as tk
+# import tkinter as tk
 
 from PIL import ImageTk, Image
 
